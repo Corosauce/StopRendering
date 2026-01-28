@@ -9,8 +9,6 @@ import java.io.File;
 
 public class ConfigFeatures implements IConfigCategory {
 
-
-
     @ConfigComment("Path to check for the curios class to cancel non player renders for")
     public static String curiosClassPath = "top.theillusivec4.curios.client.render.CuriosLayer";
 

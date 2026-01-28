@@ -10,7 +10,6 @@ public class MobListsConfig {
 
     public static List<String> mobsList = new ArrayList<>();
     public static List<String> usableMobsForList = new ArrayList<>();
-    //public static List<String> listEnhancedMobsParsedConfig = new ArrayList<>();
 
     static {
         String mc = "minecraft:";

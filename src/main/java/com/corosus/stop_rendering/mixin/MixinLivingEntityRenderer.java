@@ -33,12 +33,8 @@ public abstract class MixinLivingEntityRenderer<T extends LivingEntity, M extend
                                      float ageInTicks,
                                      float netHeadYaw,
                                      float headPitch) {
-        //StopRendering.LOGGER.error("test");
-        //StopRendering.LOGGER.error(renderLayer.getClass().getCanonicalName());
         if (renderLayer.getClass().getCanonicalName().equals(ConfigFeatures.curiosClassPath)) {
-            //StopRendering.LOGGER.error("test1");
             if (!StopRendering.canProcessEntity(entity.getType())) {
-                //StopRendering.LOGGER.error("cancelling layer render for " + entity.getType() + " - " + renderLayer.getClass().getCanonicalName());
                 return;
             }
         }
