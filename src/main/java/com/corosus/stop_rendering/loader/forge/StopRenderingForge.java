@@ -2,6 +2,7 @@ package com.corosus.stop_rendering.loader.forge;
 
 import com.corosus.coroutil.util.CU;
 import com.corosus.stop_rendering.StopRendering;
+import com.corosus.stop_rendering.config.ConfigFeatures;
 import com.corosus.stop_rendering.config.MobListsConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -15,7 +16,10 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.eventbus.ListenerList;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.IEventListener;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -28,6 +32,8 @@ import java.io.File;
 
 @Mod(StopRendering.MODID)
 public class StopRenderingForge extends StopRendering {
+
+    public boolean hasTriedToRemove = false;
 
     public StopRenderingForge() {
         super();
@@ -42,6 +48,44 @@ public class StopRenderingForge extends StopRendering {
     @SubscribeEvent
     public void registerCommands(RegisterCommandsEvent event) {
         //CommandMisc.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
+    public void hookTick(LivingEvent.LivingTickEvent event) {
+        if (!ConfigFeatures.test1) return;
+
+        if (event.getEntity().level().isClientSide() && event.getEntity() instanceof Zombie) {
+
+            if (!hasTriedToRemove) {
+                hasTriedToRemove = true;
+
+                for (int i = 0; i < 999; i++) {
+                    IEventListener[] test = event.getListenerList().getListeners(i);
+                    for (int j = 0; j < test.length; j++) {
+                        if (test[j].toString().contains("HordeTickProcedure")) {
+                            //LOGGER.error("REMOVE! " + test[j].toString());
+                            //event.getListenerList().unregister(i, test[j]);
+                            //must break out fully since indexes out of order now
+                            return;
+                        }
+                    }
+                }
+            }
+
+            //event.setCanceled(true);
+            /*ListenerList list = event.getListenerList();
+            IEventListener[] test = event.getListenerList().getListeners(3);
+
+            System.out.println("??? " + test.length);
+            int i = 0;
+            try {
+                if (test.toString().contains("corosus")) {
+                    event.getListenerList().unregister(3, test[1]);
+                }
+            } catch (Exception e) {
+
+            }*/
+        }
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)

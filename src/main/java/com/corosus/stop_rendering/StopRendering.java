@@ -7,8 +7,6 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -41,6 +39,16 @@ public class StopRendering
 
     public static boolean canConfigEntity(EntityType ent) {
         return true;
+    }
+
+    public static void test() {
+        //LOGGER.error("curiosClassPath: " + ConfigFeatures.curiosClassPath);
+        //System.out.println();
+    }
+
+    public static void cancel() {
+        //LOGGER.error("cancelling");
+        //System.out.println();
     }
 
     public static boolean canProcessEntity(EntityType ent) {

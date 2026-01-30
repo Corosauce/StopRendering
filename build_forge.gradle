@@ -132,6 +132,9 @@ repositories {
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
+    maven {
+        url "https://cursemaven.com"
+    }
     flatDir {
         dir 'libs'
     }
@@ -143,6 +146,7 @@ apply plugin: 'org.spongepowered.mixin'
 mixin {
     add sourceSets.main, "${project.mod_id}.refmap.json"
     config "${project.mod_id}.mixins.json"
+    //disableAnnotationProcessorCheck()
 }
 
 dependencies {
@@ -155,6 +159,9 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     implementation fg.deobf("com.corosus.coroutil:coroutil-forge:${project.minecraft_version}-${project.coroutil_version}")
+    //implementation ("curse.maven:immersive-engineering-231951:6206989")
+    compileOnly fg.deobf("curse.maven:curios-309927:4780213")
+    compileOnly fg.deobf("curse.maven:enhanced_hordes-899308:5565963")
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
@@ -234,4 +241,5 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    //options.compilerArgs << '-AallowTargetNotFound=true'
 }
