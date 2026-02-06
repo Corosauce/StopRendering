@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Zombie;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -34,9 +35,16 @@ public abstract class MixinLivingEntityRenderer<T extends LivingEntity, M extend
                                      float netHeadYaw,
                                      float headPitch) {
         //StopRendering.test();
-        if (renderLayer.getClass().getCanonicalName().equals(ConfigFeatures.curiosClassPath)) {
+        if (ConfigFeatures.mod_Curios_disableOnNonPlayers && renderLayer.getClass().getCanonicalName().equals(ConfigFeatures.mod_Curios_classpath)) {
             if (!StopRendering.canProcessEntity(entity.getType())) {
                 return;
+            }
+        }
+        if (ConfigFeatures.disableZombieAndHuskExtraRenderLayers && entity instanceof Zombie) {
+            if (!renderLayer.getClass().getCanonicalName().contains("HumanoidArmorLayer") &&
+                    !renderLayer.getClass().getCanonicalName().contains("CustomHeadLayer")) {
+                //StopRendering.test();
+                    return;
             }
         }
         //(LivingEntity)entity is NOT REDUNDANT, if removed it crashes

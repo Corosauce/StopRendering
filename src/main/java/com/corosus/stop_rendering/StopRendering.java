@@ -42,7 +42,7 @@ public class StopRendering
     }
 
     public static void test() {
-        //LOGGER.error("curiosClassPath: " + ConfigFeatures.curiosClassPath);
+        LOGGER.error("test");
         //System.out.println();
     }
 

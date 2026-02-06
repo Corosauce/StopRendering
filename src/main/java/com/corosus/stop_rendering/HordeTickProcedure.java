@@ -38,7 +38,8 @@ import java.util.Comparator;
 
 @Mod.EventBusSubscriber
 public class HordeTickProcedure {
-	@SubscribeEvent
+
+	/*@SubscribeEvent
 	public static void onEntityTick(LivingEvent.LivingTickEvent event) {
 		execute(event, event.getEntity().level(), event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), event.getEntity());
 	}
@@ -49,5 +50,5 @@ public class HordeTickProcedure {
 
 	private static void execute(@Nullable Event event, LevelAccessor world, double x, double y, double z, Entity entity) {
 
-	}
+	}*/
 }

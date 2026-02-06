@@ -10,9 +10,19 @@ import java.io.File;
 public class ConfigFeatures implements IConfigCategory {
 
     @ConfigComment("Path to check for the curios class to cancel non player renders for")
-    public static String curiosClassPath = "top.theillusivec4.curios.client.render.CuriosLayer";
+    public static String mod_Curios_classpath = "top.theillusivec4.curios.client.render.CuriosLayer";
 
-    public static boolean test1 = true;
+    @ConfigComment("Hyper optimizes curios use to only run for players not all entities, might help a bit if you have a large number of entities")
+    public static boolean mod_Curios_disableOnNonPlayers = true;
+
+    @ConfigComment("Same as disableCuriosOnNonPlayers but for Artifacts mod")
+    public static boolean mod_Artifacts_disableOnNonPlayers = true;
+
+    @ConfigComment("The mods expensive mob stacking code needlessly runs on the client causing a frame stutter 20 times a second, this stops it")
+    public static boolean mod_EnhancedHordes_disableClientHordeTickProcedure = true;
+
+    @ConfigComment("Alternative to disableCuriosOnNonPlayers, not as extensive")
+    public static boolean disableZombieAndHuskExtraRenderLayers = true;
 
     @Override
     public String getName() {

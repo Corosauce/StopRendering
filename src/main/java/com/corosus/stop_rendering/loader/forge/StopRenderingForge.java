@@ -17,7 +17,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.ListenerList;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.IEventListener;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,9 +49,9 @@ public class StopRenderingForge extends StopRendering {
         //CommandMisc.register(event.getDispatcher());
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public void hookTick(LivingEvent.LivingTickEvent event) {
-        if (!ConfigFeatures.test1) return;
+        if (!ConfigFeatures.disableClientHordeTickProcedure) return;
 
         if (event.getEntity().level().isClientSide() && event.getEntity() instanceof Zombie) {
 
@@ -73,7 +72,7 @@ public class StopRenderingForge extends StopRendering {
             }
 
             //event.setCanceled(true);
-            /*ListenerList list = event.getListenerList();
+            *//*ListenerList list = event.getListenerList();
             IEventListener[] test = event.getListenerList().getListeners(3);
 
             System.out.println("??? " + test.length);
@@ -84,9 +83,9 @@ public class StopRenderingForge extends StopRendering {
                 }
             } catch (Exception e) {
 
-            }*/
+            }*//*
         }
-    }
+    }*/
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
