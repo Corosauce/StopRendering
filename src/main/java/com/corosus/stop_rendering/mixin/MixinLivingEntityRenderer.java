@@ -34,17 +34,20 @@ public abstract class MixinLivingEntityRenderer<T extends LivingEntity, M extend
                                      float ageInTicks,
                                      float netHeadYaw,
                                      float headPitch) {
-        //StopRendering.test();
-        if (ConfigFeatures.mod_Curios_disableOnNonPlayers && renderLayer.getClass().getCanonicalName().equals(ConfigFeatures.mod_Curios_classpath)) {
-            if (!StopRendering.canProcessEntity(entity.getType())) {
-                return;
-            }
-        }
-        if (ConfigFeatures.disableZombieAndHuskExtraRenderLayers && entity instanceof Zombie) {
-            if (!renderLayer.getClass().getCanonicalName().contains("HumanoidArmorLayer") &&
-                    !renderLayer.getClass().getCanonicalName().contains("CustomHeadLayer")) {
-                //StopRendering.test();
+        if (ConfigFeatures.modActive) {
+            if (ConfigFeatures.mod_Curios_disableOnNonPlayers && StopRendering.isCuriosRenderLayer(renderLayer)) {
+                if (!StopRendering.canProcessEntity(entity.getType())) {
                     return;
+                }
+            }
+
+            if (ConfigFeatures.disableZombieAndHuskExtraRenderLayers && entity instanceof Zombie) {
+                if (!renderLayer.getClass().getCanonicalName().contains("HumanoidArmorLayer") &&
+                        !renderLayer.getClass().getCanonicalName().contains("CustomHeadLayer")) {
+                    if (!StopRendering.canProcessEntity(entity.getType())) {
+                        return;
+                    }
+                }
             }
         }
         //(LivingEntity)entity is NOT REDUNDANT, if removed it crashes

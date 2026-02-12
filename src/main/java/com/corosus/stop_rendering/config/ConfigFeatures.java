@@ -9,6 +9,9 @@ import java.io.File;
 
 public class ConfigFeatures implements IConfigCategory {
 
+    @ConfigComment("Enables or disables every feature this mod provides. Handy for testing how much it helps.")
+    public static boolean modActive = true;
+
     @ConfigComment("Path to check for the curios class to cancel non player renders for")
     public static String mod_Curios_classpath = "top.theillusivec4.curios.client.render.CuriosLayer";
 
@@ -20,6 +23,9 @@ public class ConfigFeatures implements IConfigCategory {
 
     @ConfigComment("The mods expensive mob stacking code needlessly runs on the client causing a frame stutter 20 times a second, this stops it")
     public static boolean mod_EnhancedHordes_disableClientHordeTickProcedure = true;
+
+    @ConfigComment("Stops more expensive unneeded client side calculations for non players")
+    public static boolean mod_ArmorSetBonuses_disableClientBonusApplyingOnNonPlayers = true;
 
     @ConfigComment("Alternative to disableCuriosOnNonPlayers, not as extensive")
     public static boolean disableZombieAndHuskExtraRenderLayers = true;

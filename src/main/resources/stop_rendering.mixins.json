@@ -5,13 +5,17 @@
   "refmap": "stop_rendering.refmap.json",
   "client": [
     "MixinLivingEntityRenderer",
-    "MixinZombieStackingClient"
+    "MixinZombieStackingClient",
+    "MixinArmorSetBonusesApplyBonuses",
+    "MixinClientCuriosTick",
+    "MixinClientArtifactsTick"
+
   ],
   "injectors": {
     "defaultRequire": 0
   },
   "minVersion": "0.8",
   "mixins": [
-    "MixinClientCuriosTick"
+
   ]
 }

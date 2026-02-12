@@ -30,7 +30,7 @@ public class MobListsConfig {
 
             BUILDER.comment("General mod settings").push("general");
 
-            mobsList = BUILDER.comment("Mobs to allow rendering of curios").defineList("whitelistMobs", MobListsConfig.mobsList,
+            mobsList = BUILDER.comment("Mobs to allow to run as usual, untouched by this mod").defineList("whitelistMobs", MobListsConfig.mobsList,
                     it -> it instanceof String);
 
             usableMobsForList = BUILDER.comment("These are all the mobs from your modpack you can choose from when adding to the whitelist, use this to find the mob you need, then add it to the array for the whitelistMobs config option.").defineList("mobsYouCanWhitelist", MobListsConfig.usableMobsForList,

@@ -160,8 +160,10 @@ dependencies {
 
     implementation fg.deobf("com.corosus.coroutil:coroutil-forge:${project.minecraft_version}-${project.coroutil_version}")
     //implementation ("curse.maven:immersive-engineering-231951:6206989")
-    compileOnly fg.deobf("curse.maven:curios-309927:4780213")
-    compileOnly fg.deobf("curse.maven:enhanced_hordes-899308:5565963")
+    implementation fg.deobf("curse.maven:curios-309927:6418456")
+    implementation fg.deobf("curse.maven:artifacts-312353:6399828")
+    implementation fg.deobf("curse.maven:armor_set_bonuses-549892:6843216")
+    implementation fg.deobf("curse.maven:enhanced_hordes-899308:5565963")
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency

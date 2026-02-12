@@ -1,24 +1,13 @@
 package com.corosus.stop_rendering.loader.forge;
 
-import com.corosus.coroutil.util.CU;
 import com.corosus.stop_rendering.StopRendering;
-import com.corosus.stop_rendering.config.ConfigFeatures;
 import com.corosus.stop_rendering.config.MobListsConfig;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.Husk;
-import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.IEventListener;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -26,13 +15,15 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 @Mod(StopRendering.MODID)
 public class StopRenderingForge extends StopRendering {
-
-    public boolean hasTriedToRemove = false;
 
     public StopRenderingForge() {
         super();
@@ -40,52 +31,43 @@ public class StopRenderingForge extends StopRendering {
 
         MinecraftForge.EVENT_BUS.register(this);
         modEventBus.register(StopRendering.class);
+        modEventBus.addListener(this::loadComplete);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, MobListsConfig.CONFIG, StopRendering.MODID + File.separator + "MobsWhitelist.toml");
+
+        for(Map.Entry<ResourceKey<EntityType<?>>, EntityType<?>> entry : BuiltInRegistries.ENTITY_TYPE.entrySet()) {
+            boolean canConfig = canConfigEntity(entry.getValue());
+            if (canConfig) {
+                MobListsConfig.usableMobsForList.add(entry.getKey().location().toString());
+            }
+        }
+
+        Iterator<EntityType<?>> it = ForgeRegistries.ENTITY_TYPES.iterator();
+
+        for(Map.Entry<ResourceKey<EntityType<?>>, EntityType<?>> entry : ForgeRegistries.ENTITY_TYPES.getEntries()) {
+            boolean canConfig = canConfigEntity(entry.getValue());
+            if (canConfig) {
+                MobListsConfig.usableMobsForList.add(entry.getKey().location().toString());
+            }
+        }
+    }
+
+    
+
+    @Override
+    public String getRegistryName(EntityType type) {
+        return ForgeRegistries.ENTITY_TYPES.getKey(type).toString();
+    }
+
+    @Override
+    public Set<Map.Entry<ResourceKey<EntityType<?>>, EntityType<?>>> getEntityRegistry() {
+        return ForgeRegistries.ENTITY_TYPES.getEntries();
     }
 
     @SubscribeEvent
     public void registerCommands(RegisterCommandsEvent event) {
         //CommandMisc.register(event.getDispatcher());
     }
-
-    /*@SubscribeEvent
-    public void hookTick(LivingEvent.LivingTickEvent event) {
-        if (!ConfigFeatures.disableClientHordeTickProcedure) return;
-
-        if (event.getEntity().level().isClientSide() && event.getEntity() instanceof Zombie) {
-
-            if (!hasTriedToRemove) {
-                hasTriedToRemove = true;
-
-                for (int i = 0; i < 999; i++) {
-                    IEventListener[] test = event.getListenerList().getListeners(i);
-                    for (int j = 0; j < test.length; j++) {
-                        if (test[j].toString().contains("HordeTickProcedure")) {
-                            //LOGGER.error("REMOVE! " + test[j].toString());
-                            //event.getListenerList().unregister(i, test[j]);
-                            //must break out fully since indexes out of order now
-                            return;
-                        }
-                    }
-                }
-            }
-
-            //event.setCanceled(true);
-            *//*ListenerList list = event.getListenerList();
-            IEventListener[] test = event.getListenerList().getListeners(3);
-
-            System.out.println("??? " + test.length);
-            int i = 0;
-            try {
-                if (test.toString().contains("corosus")) {
-                    event.getListenerList().unregister(3, test[1]);
-                }
-            } catch (Exception e) {
-
-            }*//*
-        }
-    }*/
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
@@ -94,43 +76,6 @@ public class StopRenderingForge extends StopRendering {
 
     private void loadComplete(final FMLLoadCompleteEvent event)
     {
-
-    }
-
-    @SubscribeEvent
-    public void worldTick(TickEvent.LevelTickEvent event) {
-        if (StopRendering.testSpawningActive) {
-            Level level = event.level;
-            int huskOrZombieCount = 0;
-            if (event.phase == TickEvent.Phase.END && level.dimension() == Level.OVERWORLD && level.getGameTime() % 100 == 0 && level instanceof ServerLevel serverLevel) {
-                for (Entity entity : serverLevel.getAllEntities()) {
-                    if (entity instanceof Zombie) {
-                        huskOrZombieCount++;
-                    }
-                }
-
-                int spawnMax = 1000;
-                int spawnRange = 100;
-                int spawnCount = 0;
-                if (huskOrZombieCount < spawnMax) {
-                    for (int i = 0; i < spawnMax - huskOrZombieCount; i++) {
-
-                        int playerCount = level.players().size();
-                        Player player = level.players().get(CU.rand().nextInt(playerCount));
-                        int x = Mth.floor(player.position().x + ((CU.rand().nextFloat() * spawnRange) - (CU.rand().nextFloat() * spawnRange)));
-                        int z = Mth.floor(player.position().z + ((CU.rand().nextFloat() * spawnRange) - (CU.rand().nextFloat() * spawnRange)));
-                        int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
-
-                        Husk mob = new Husk(EntityType.HUSK, level);
-                        mob.setPos(x, y, z);
-                        ((Mob)mob).finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(mob.blockPosition()), MobSpawnType.SPAWNER, (SpawnGroupData)null, (CompoundTag)null);
-                        level.addFreshEntity(mob);
-                        spawnCount++;
-                    }
-                }
-                System.out.println("spawned " + spawnCount + " husks");
-            }
-
-        }
+        StopRendering.generateEntityTickList();
     }
 }
